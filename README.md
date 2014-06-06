@@ -69,7 +69,6 @@ The redirection ports for the AVD’s will be-
 The app opens one server socket that listens on 10000.
 
 Based on the design of Amazon Dynamo, the following features have been implemented:
-
 ### Membership
 Just as the original Dynamo, every node can know every other node.
 This means that each node knows all other nodes in the system and also knows exactly which partition
@@ -93,7 +92,6 @@ For this purpose, a timeout for a socket read is used; and if a node does not re
 it is considered as a failed node.
 When a coordinator for a request fails and it does not respond to the request, its successor is contacted
 next for the request.
-
 
 There is a tester for checking if everything is working properly.
 
