@@ -38,8 +38,8 @@ partition that the key belongs to.
 
 Unlike Dynamo, there are two things which have not been implemented.
 
-    * Virtual nodes: In this implementation we use physical nodes rather than virtual nodes, i.e., all partitions are static and fixed.
-    * Hinted handoff: This implementation does not implement hinted handoff. This means that when there is a failure, replication takes place only on two nodes.
+* Virtual nodes: In this implementation we use physical nodes rather than virtual nodes, i.e., all partitions are static and fixed.
+* Hinted handoff: This implementation does not implement hinted handoff. This means that when there is a failure, replication takes place only on two nodes.
 
 All replicas store the same value for each key. This is “per-key” consistency.
 There is no consistency guarantee across keys. More formally, per-key linearizability is implemented.
@@ -70,29 +70,29 @@ The app opens one server socket that listens on 10000.
 
 Based on the design of Amazon Dynamo, the following features have been implemented:
 
-    ### Membership
-    Just as the original Dynamo, every node can know every other node.
-    This means that each node knows all other nodes in the system and also knows exactly which partition
-    belongs to which node; any node can forward a request to the correct node without using a ring-based routing.
+### Membership
+Just as the original Dynamo, every node can know every other node.
+This means that each node knows all other nodes in the system and also knows exactly which partition
+belongs to which node; any node can forward a request to the correct node without using a ring-based routing.
     
-    ### Request routing
-    Unlike Chord, each Dynamo node knows all other nodes in the system and also knows exactly which
-    partition belongs to which node. Under no failures, all requests are directly forwarded to the coordinator,
-    and the coordinator should be in charge of serving read/write operations.
+### Request routing
+Unlike Chord, each Dynamo node knows all other nodes in the system and also knows exactly which
+partition belongs to which node. Under no failures, all requests are directly forwarded to the coordinator,
+and the coordinator should be in charge of serving read/write operations.
   
-    ### Chain replication
-    This replication strategy provides linearizability. In chain replication, a write operation always comes to
-    the first partition; then it propagates to the next two partitions in sequence. The last partition returns
-    the result of the write. A read operation always comes to the last partition and reads the value from
-    the last partition.
+### Chain replication
+This replication strategy provides linearizability. In chain replication, a write operation always comes to
+the first partition; then it propagates to the next two partitions in sequence. The last partition returns
+the result of the write. A read operation always comes to the last partition and reads the value from
+the last partition.
 
-    ### Failure handling
-    Handling failures should be done very carefully because there can be many corner cases to consider and cover.
-    Just as the original Dynamo, each request is used to detect a node failure.
-    For this purpose, a timeout for a socket read is used; and if a node does not respond within the timeout,
-    it is considered as a failed node.
-    When a coordinator for a request fails and it does not respond to the request, its successor is contacted
-    next for the request.
+### Failure handling
+Handling failures should be done very carefully because there can be many corner cases to consider and cover.
+Just as the original Dynamo, each request is used to detect a node failure.
+For this purpose, a timeout for a socket read is used; and if a node does not respond within the timeout,
+it is considered as a failed node.
+When a coordinator for a request fails and it does not respond to the request, its successor is contacted
+next for the request.
 
 
 There is a tester for checking if everything is working properly.
